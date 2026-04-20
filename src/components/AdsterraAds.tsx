@@ -23,13 +23,21 @@ export function AdsterraScript() {
  * Place this component where you want ads to appear
  * Usage: <AdContainer type="popunder" id="Popunder_1" />
  */
-export function AdContainer({ id, className = '' }: { id: string; className?: string }) {
+export function AdContainer({ 
+  id, 
+  className = '',
+  style 
+}: { 
+  id: string
+  className?: string
+  style?: React.CSSProperties
+}) {
   return (
     <div
       id={id}
       className={`adsterra-ad-container ${className}`}
       data-ad-slot={id}
-      style={{ minHeight: '100px' }}
+      style={{ minHeight: '100px', ...style }}
     />
   )
 }
