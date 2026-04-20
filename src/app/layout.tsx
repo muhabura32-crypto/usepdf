@@ -53,10 +53,6 @@ export const metadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
-    'bingbot': {
-      index: true,
-      follow: true,
-    },
   },
   openGraph: {
     type: 'website',
