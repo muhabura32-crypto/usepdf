@@ -32,7 +32,7 @@ export function PerformanceMonitor() {
           if ((window as any).gtag) {
             (window as any).gtag('event', 'page_view', {
               metric_name: 'LCP',
-              metric_value: lastEntry.renderTime || lastEntry.loadTime,
+              metric_value: lastEntry.startTime,
             })
           }
         })
