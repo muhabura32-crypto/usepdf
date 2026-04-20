@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 import { GoogleAnalytics } from '@/components/GoogleAnalytics'
 import { LanguageProvider } from '@/contexts/LanguageContext'
@@ -7,6 +8,8 @@ import { ThemeProvider } from '@/contexts/ThemeContext'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { PerformanceMonitor } from '@/components/PerformanceMonitor'
+import { AdsterraScript, PopunderAd } from '@/components/AdsterraAds'
+import { faqSchema, breadcrumbSchema } from '@/utils/advancedSEO'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -85,6 +88,12 @@ export const metadata: Metadata = {
     google: 'google-site-verification-code', // Add your Google verification code
   },
 } as const
+
+// FAQ Schema for rich snippets
+const faqSchemaData = faqSchema
+
+// Breadcrumb Schema for navigation
+const breadcrumbSchemaData = breadcrumbSchema
 
 // Enhanced JSON-LD Structured Data
 const organizationSchema = {
@@ -187,6 +196,18 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(webApplicationSchema) }}
           suppressHydrationWarning
         />
+        {/* FAQ Schema for rich snippets */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchemaData) }}
+          suppressHydrationWarning
+        />
+        {/* Breadcrumb Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchemaData) }}
+          suppressHydrationWarning
+        />
         {/* Preconnect to external domains for performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -196,8 +217,18 @@ export default function RootLayout({
         <link rel="icon" href="/logo.png" type="image/png" sizes="192x192" />
         <link rel="icon" href="/logo.webp" type="image/webp" sizes="192x192" />
         <link rel="apple-touch-icon" href="/logo.png" />
+        {/* Adsterra Ad Network Script */}
+        <Script
+          src="https://a.magsrv.com/ad-provider.js"
+          strategy="afterInteractive"
+          async
+        />
       </head>
       <body className={`${inter.variable} min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 antialiased font-sans`}>
+        {/* Adsterra Ads Initialization */}
+        <AdsterraScript />
+        <PopunderAd />
+        
         <LanguageProvider>
           <ThemeProvider>
             <div className="min-h-screen flex flex-col">

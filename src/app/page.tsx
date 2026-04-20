@@ -23,6 +23,7 @@ import {
 } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { sampleReviews } from '@/components/RatingSystem'
+import { NativeBannerAd } from '@/components/AdsterraAds'
 import dynamic from 'next/dynamic'
 
 // Dynamically import heavy components for better performance
@@ -471,6 +472,13 @@ export default function HomePage() {
           reviews={sampleReviews}
         />
       </div>
+
+      {/* Adsterra Native Banner Ad */}
+      <section className="py-8 bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800">
+        <div className="container-custom">
+          <NativeBannerAd />
+        </div>
+      </section>
     </div>
   )
 }
