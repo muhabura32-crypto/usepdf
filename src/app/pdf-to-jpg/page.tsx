@@ -274,7 +274,7 @@ export default function PDFToJPGPage() {
                       onClick={convertToJPG}
                       className="btn-primary w-full"
                     >
-                      <Image className="w-5 h-5 mr-2" />
+                      <RotateCw className="w-5 h-5 mr-2" />
                       Convert to JPG
                     </button>
                   </div>
