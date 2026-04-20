@@ -212,7 +212,7 @@ export default function PDFToJPGPage() {
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center">
                         <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-xl flex items-center justify-center mr-4">
-                          <Image className="w-6 h-6 text-red-500" />
+                          <FileText className="w-6 h-6 text-red-500" />
                         </div>
                         <div>
                           <p className="font-medium text-gray-900 dark:text-white truncate max-w-xs">
