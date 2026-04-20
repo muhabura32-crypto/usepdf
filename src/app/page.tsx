@@ -23,6 +23,7 @@ import {
   Sparkles
 } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { sampleReviews } from '@/components/RatingSystem'
 import dynamic from 'next/dynamic'
 
 // Dynamically import heavy components for better performance
