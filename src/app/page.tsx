@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import React from 'react'
-import Image from 'next/image'
 import { motion } from 'framer-motion'
 import {
   FileText,
@@ -305,27 +304,13 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section with Background Image */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/background-usepdf-image.webp"
-            alt="UsePDF Background"
-            fill
-            className="object-cover"
-            priority
-            quality={75}
-            placeholder="blur"
-            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z"
-          />
-          {/* Enhanced overlay for better text contrast */}
-          <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/75 to-black/80" />
-          <div className="absolute inset-0 bg-black/40 mix-blend-multiply" />
-        </div>
+      {/* Hero Section with simpler gradient background */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800">
+        <div className="absolute inset-0 bg-slate-950/90" />
+        <div className="absolute inset-0 bg-black/30" />
 
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 z-10 pointer-events-none">
+        {/* Animated Background Elements - hidden on small screens */}
+        <div className="absolute inset-0 z-10 pointer-events-none hidden md:block">
           <div className="absolute top-20 left-20 w-72 h-72 bg-primary-500/10 rounded-full blur-3xl animate-pulse" />
           <div className="absolute bottom-20 right-20 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
         </div>
@@ -336,10 +321,10 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 text-white drop-shadow-lg">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-5 sm:mb-6 text-white drop-shadow-lg">
               Free PDF Tools
             </h1>
-            <p className="text-lg sm:text-xl md:text-2xl text-gray-100 mb-8 max-w-4xl mx-auto leading-relaxed drop-shadow-md">
+            <p className="text-base sm:text-lg md:text-xl text-gray-200 mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
               Fast, private, and completely free PDF tools. No signup required. Process your files instantly with professional-grade quality.
             </p>
 
@@ -348,7 +333,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="mb-12"
+              className="mb-10"
             >
               <LiveStats className="justify-center" />
             </motion.div>
@@ -362,14 +347,14 @@ export default function HomePage() {
             >
               <Link
                 href="/merge-pdf"
-                className="btn-primary text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 shadow-xl inline-flex items-center justify-center"
+                className="btn-primary text-base sm:text-lg px-5 sm:px-7 py-3 sm:py-4 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 shadow-xl inline-flex items-center justify-center"
               >
                 <Sparkles className="w-5 h-5 mr-2" />
                 Get Started Free
               </Link>
               <Link
                 href="#tools"
-                className="btn-secondary text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 border-2 border-white/30 hover:border-white/50 hover:bg-white/10 inline-flex items-center justify-center"
+                className="btn-secondary text-base sm:text-lg px-5 sm:px-7 py-3 sm:py-4 border-2 border-white/30 hover:border-white/50 hover:bg-white/10 inline-flex items-center justify-center"
               >
                 View All Tools
               </Link>
@@ -382,7 +367,7 @@ export default function HomePage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 1 }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20"
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 hidden sm:block"
         >
           <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
             <motion.div
@@ -464,17 +449,23 @@ export default function HomePage() {
       </section>
 
       {/* Trust Indicators */}
-      <TrustIndicators />
+      <div className="hidden lg:block">
+        <TrustIndicators />
+      </div>
 
       {/* Trusted Institutions */}
-      <TrustedInstitutions />
+      <div className="hidden lg:block">
+        <TrustedInstitutions />
+      </div>
 
       {/* Reviews Section */}
-      <ReviewSection
-        averageRating={4.9}
-        totalReviews={1250}
-        reviews={sampleReviews}
-      />
+      <div className="hidden lg:block">
+        <ReviewSection
+          averageRating={4.9}
+          totalReviews={1250}
+          reviews={sampleReviews}
+        />
+      </div>
     </div>
   )
 }
