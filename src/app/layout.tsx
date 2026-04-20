@@ -73,8 +73,11 @@ export const metadata: Metadata = {
   },
   manifest: '/manifest.json',
   icons: {
-    icon: '/favicon.ico',
-    apple: '/apple-touch-icon.png',
+    icon: [
+      { url: '/logo.png', sizes: '192x192', type: 'image/png' },
+      { url: '/logo.webp', sizes: '192x192', type: 'image/webp' },
+    ],
+    apple: '/logo.png',
   },
   category: 'technology',
   classification: 'Free Online PDF Tools',
@@ -189,6 +192,10 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+        {/* Favicon */}
+        <link rel="icon" href="/logo.png" type="image/png" sizes="192x192" />
+        <link rel="icon" href="/logo.webp" type="image/webp" sizes="192x192" />
+        <link rel="apple-touch-icon" href="/logo.png" />
       </head>
       <body className={`${inter.variable} min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 antialiased font-sans`}>
         <LanguageProvider>
