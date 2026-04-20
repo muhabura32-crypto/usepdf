@@ -152,7 +152,7 @@ export default function PDFToJPGPage() {
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center space-x-2 group">
               <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
-                <Image className="w-6 h-6 text-white" />
+                <ImageIcon className="w-6 h-6 text-white" />
               </div>
               <span className="text-xl font-bold text-gray-900 dark:text-white">
                 PDF Tools
