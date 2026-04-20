@@ -170,7 +170,7 @@ export default function SplitPDFPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Header */}
       <header className="sticky top-0 z-50 glass border-b border-gray-200 dark:border-gray-800">
         <div className="container-custom">

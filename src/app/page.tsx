@@ -260,17 +260,22 @@ function ToolCard({ tool, index }: { tool: typeof tools[0], index: number }) {
         )}
 
         {/* Icon */}
-        <div className={`relative w-16 h-16 bg-gradient-to-br ${tool.color} rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+        <div className={`relative w-16 h-16 bg-gradient-to-br ${tool.color} rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 hidden sm:flex`}>
           <tool.icon className="w-8 h-8 text-white" />
         </div>
 
         {/* Content */}
-        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors flex-grow">
+        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors flex-grow hidden sm:block">
           {t(tool.name)}
         </h3>
 
-        {/* Description - Always visible */}
-        <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed text-sm flex-grow">
+        {/* Mobile: Show name smaller */}
+        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 sm:hidden">
+          {t(tool.name)}
+        </h3>
+
+        {/* Description - Always visible on desktop, hidden on mobile */}
+        <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed text-sm flex-grow hidden sm:block">
           {t(tool.name + 'Desc')}
         </p>
 

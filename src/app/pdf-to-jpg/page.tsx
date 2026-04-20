@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { Image as ImageIcon, Download, Upload, ArrowLeft, CheckCircle, AlertCircle, Loader2, File, FileText, Minimize2, Combine, Scissors, RotateCw } from 'lucide-react'
 import Link from 'next/link'
 import { ToolDescription } from '@/components/ToolDescription'
+import { saveFileToSession, getFileFromSession, clearFileSession } from '@/utils/fileStorage'
 
 type ProcessingStatus = 'idle' | 'processing' | 'completed' | 'error'
 
@@ -17,6 +18,17 @@ export default function PDFToJPGPage() {
   const [error, setError] = useState<string | null>(null)
   const [pageCount, setPageCount] = useState(0)
   const [quality, setQuality] = useState<'low' | 'medium' | 'high'>('high')
+
+  // Load file from session storage on mount
+  useEffect(() => {
+    const loadFileFromSession = async () => {
+      const sessionFile = await getFileFromSession()
+      if (sessionFile) {
+        setFile(sessionFile)
+      }
+    }
+    loadFileFromSession()
+  }, [])
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
@@ -30,7 +42,8 @@ export default function PDFToJPGPage() {
         return
       }
       setFile(pdfFile)
-      setPageCount(0) // Will be set after processing starts
+      saveFileToSession(pdfFile) // Save to session for navigation
+      setPageCount(0)
       setError(null)
       setStatus('idle')
       setDownloadUrls([])
@@ -145,7 +158,7 @@ export default function PDFToJPGPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Header */}
       <header className="sticky top-0 z-50 glass border-b border-gray-200 dark:border-gray-800">
         <div className="container-custom">

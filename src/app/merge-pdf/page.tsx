@@ -152,7 +152,7 @@ export default function MergePDFPage() {
   const faqs = generateToolFAQSchema('mergePdf')
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Schema Markup */}
       <WebApplicationSchema
         name="Merge PDF - Combine Multiple PDFs Online"
