@@ -9,6 +9,7 @@ import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { PerformanceMonitor } from '@/components/PerformanceMonitor'
 import { AdsterraScript, PopunderAd } from '@/components/AdsterraAds'
+import { AdBlockerDetector } from '@/components/AdBlockerDetector'
 import { faqSchema, breadcrumbSchema } from '@/utils/advancedSEO'
 
 const inter = Inter({
@@ -228,6 +229,7 @@ export default function RootLayout({
         {/* Adsterra Ads Initialization */}
         <AdsterraScript />
         <PopunderAd />
+        <AdBlockerDetector />
         
         <LanguageProvider>
           <ThemeProvider>

@@ -4,14 +4,24 @@ import { useEffect } from 'react'
 
 export function AdsterraScript() {
   useEffect(() => {
-    // Initialize Adsterra ads after component mounts
+    // Load Adsterra scripts
     if (typeof window !== 'undefined') {
-      // Adsterra script will auto-load via next script tag
-      // This ensures ads are properly initialized on page load
-      const script = document.createElement('script')
-      script.src = 'https://a.magsrv.com/ad-provider.js'
-      script.async = true
-      document.head.appendChild(script)
+      // Popunder scripts
+      const popunderScript1 = document.createElement('script')
+      popunderScript1.src = 'https://tuxedoarbourannouncement.com/bf/93/6d/bf936dcbca5a547e4bb602e649b57d5a.js'
+      popunderScript1.async = true
+      document.head.appendChild(popunderScript1)
+
+      const popunderScript2 = document.createElement('script')
+      popunderScript2.src = 'https://tuxedoarbourannouncement.com/12/c5/b8/12c5b8135e28411b4621a530105e946e.js'
+      popunderScript2.async = true
+      document.head.appendChild(popunderScript2)
+
+      const popunderScript3 = document.createElement('script')
+      popunderScript3.src = 'https://tuxedoarbourannouncement.com/34dfef78cee11188b677b139aeba5b85/invoke.js'
+      popunderScript3.async = true
+      popunderScript3.setAttribute('data-cfasync', 'false')
+      document.head.appendChild(popunderScript3)
     }
   }, [])
 
@@ -19,10 +29,114 @@ export function AdsterraScript() {
 }
 
 /**
- * Adsterra Ad Container Component
- * Place this component where you want ads to appear
- * Usage: <AdContainer type="popunder" id="Popunder_1" />
+ * Native Banner Ad with customizable dimensions
+ * Default: 468x60 (half page), responsive
  */
+export function NativeBannerAd({ width = 468, height = 60 }: { width?: number; height?: number } = {}) {
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Set Adsterra options for native banner
+      ;(window as any).atOptions = {
+        key: 'e90add9736aed2790832f91965dc7b23',
+        format: 'iframe',
+        height: height,
+        width: width,
+        params: {}
+      }
+
+      // Load the ad script
+      const script = document.createElement('script')
+      script.src = 'https://tuxedoarbourannouncement.com/e90add9736aed2790832f91965dc7b23/invoke.js'
+      script.async = true
+      document.body.appendChild(script)
+    }
+  }, [width, height])
+
+  return (
+    <div className="w-full flex justify-center my-4">
+      <div className="adsterra-ad-container" style={{ minHeight: `${height}px`, minWidth: `${width}px` }} />
+    </div>
+  )
+}
+
+/**
+ * Mobile Responsive Banner (320x50)
+ */
+export function MobileBannerAd() {
+  return <NativeBannerAd width={320} height={50} />
+}
+
+/**
+ * Leaderboard Banner (728x90)
+ */
+export function LeaderboardBannerAd() {
+  return <NativeBannerAd width={728} height={90} />
+}
+
+/**
+ * Medium Rectangle (300x250)
+ */
+export function MediumRectangleAd() {
+  return <NativeBannerAd width={300} height={250} />
+}
+
+/**
+ * Half Page Banner (468x60)
+ */
+export function HalfPageBannerAd() {
+  return <NativeBannerAd width={468} height={60} />
+}
+
+/**
+ * Popunder Ad - Appears behind browser window
+ * Include div container for popunder
+ */
+export function PopunderAdContainer() {
+  return <div id="container-34dfef78cee11188b677b139aeba5b85" />
+}
+
+// Legacy components for backwards compatibility
+export function LeaderboardBanner() {
+  return <LeaderboardBannerAd />
+}
+
+export function MobileBanner() {
+  return (
+    <div className="flex justify-center my-2 md:hidden">
+      <MobileBannerAd />
+    </div>
+  )
+}
+
+export function Banner468x60() {
+  return (
+    <div className="flex justify-center my-4">
+      <HalfPageBannerAd />
+    </div>
+  )
+}
+
+export function MediumRectangle() {
+  return (
+    <div className="flex justify-center my-4">
+      <MediumRectangleAd />
+    </div>
+  )
+}
+
+export function SocialBarAd() {
+  return (
+    <div className="fixed right-0 top-1/2 transform -translate-y-1/2 z-40">
+      <div className="adsterra-ad-container" />
+    </div>
+  )
+}
+
+export function PopunderAd() {
+  return <PopunderAdContainer />
+}
+
+// Generic ad container (legacy)
 export function AdContainer({ 
   id, 
   className = '',
@@ -40,101 +154,4 @@ export function AdContainer({
       style={{ minHeight: '100px', ...style }}
     />
   )
-}
-
-/**
- * Native Banner Ad - Best for header/footer placement
- */
-export function NativeBannerAd() {
-  return (
-    <div className="w-full my-4">
-      <AdContainer id="NativeBanner_1" className="mx-auto max-w-full" />
-    </div>
-  )
-}
-
-/**
- * Leaderboard Banner (728x90) - Best for header/footer
- */
-export function LeaderboardBanner() {
-  return (
-    <div className="flex justify-center my-4">
-      <AdContainer id="728x90_1" className="w-full max-w-full" />
-    </div>
-  )
-}
-
-/**
- * Medium Rectangle (300x250) - Best for sidebar
- */
-export function MediumRectangle() {
-  return (
-    <div className="flex justify-center my-4">
-      <AdContainer id="300x250_1" className="w-full" />
-    </div>
-  )
-}
-
-/**
- * Mobile Banner (320x50) - Best for mobile devices
- */
-export function MobileBanner() {
-  return (
-    <div className="flex justify-center my-2 md:hidden">
-      <AdContainer id="320x50_1" className="w-full" />
-    </div>
-  )
-}
-
-/**
- * Banner 468x60 - Half page width banner
- */
-export function Banner468x60() {
-  return (
-    <div className="flex justify-center my-4">
-      <AdContainer id="468x60_1" className="w-full" />
-    </div>
-  )
-}
-
-/**
- * Skyscraper (160x600) - Best for sidebars
- */
-export function SkyscraperAd() {
-  return (
-    <div className="hidden lg:flex justify-end my-4">
-      <AdContainer id="160x600_1" />
-    </div>
-  )
-}
-
-/**
- * Wide Skyscraper (160x300) - Best for sidebars
- */
-export function WideSkyscraper() {
-  return (
-    <div className="flex justify-center my-4 hidden md:block">
-      <AdContainer id="160x300_1" />
-    </div>
-  )
-}
-
-/**
- * Social Bar Ad - Best for sidebar or vertical placement
- * Automatically displays as vertical social media bar
- */
-export function SocialBarAd() {
-  return (
-    <div className="fixed right-0 top-1/2 transform -translate-y-1/2 z-40">
-      <AdContainer id="SocialBar_1" />
-    </div>
-  )
-}
-
-/**
- * Popunder Ad - Appears as popup behind current window
- * Automatically handled by Adsterra script
- */
-export function PopunderAd() {
-  return <AdContainer id="Popunder_1" style={{ display: 'none' }} />
 }

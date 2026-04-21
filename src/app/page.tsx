@@ -23,7 +23,7 @@ import {
 } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { sampleReviews } from '@/components/RatingSystem'
-import { NativeBannerAd, LeaderboardBanner, MobileBanner, MediumRectangle } from '@/components/AdsterraAds'
+import { NativeBannerAd, LeaderboardBannerAd, MobileBannerAd, MediumRectangleAd } from '@/components/AdsterraAds'
 import dynamic from 'next/dynamic'
 
 // Dynamically import heavy components for better performance
@@ -390,10 +390,12 @@ export default function HomePage() {
         <div className="container-custom">
           {/* Leaderboard Banner (728x90) - Desktop */}
           <div className="hidden sm:block mb-3">
-            <LeaderboardBanner />
+            <LeaderboardBannerAd />
           </div>
           {/* Mobile Banner (320x50) - Mobile */}
-          <MobileBanner />
+          <div className="flex justify-center my-2 md:hidden">
+            <MobileBannerAd />
+          </div>
         </div>
       </section>
 
@@ -469,7 +471,7 @@ export default function HomePage() {
       {/* Advertisement Section - Medium Rectangle */}
       <section className="py-12 bg-gray-50 dark:bg-gray-900 flex justify-center">
         <div className="w-full max-w-fit">
-          <MediumRectangle />
+          <MediumRectangleAd />
         </div>
       </section>
 
