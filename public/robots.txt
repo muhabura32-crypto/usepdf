@@ -5,17 +5,6 @@ Disallow: /api/
 
 # Sitemaps
 Sitemap: https://usepdf.xyz/sitemap.xml
-Sitemap: https://usepdf.xyz/sitemap-0.xml
 
 # Crawl delay to be respectful
 Crawl-delay: 1
-
-# Block bad bots
-User-agent: AhrefsBot
-Disallow: /
-
-User-agent: SemrushBot
-Crawl-delay: 10
-
-User-agent: DotBot
-Disallow: /

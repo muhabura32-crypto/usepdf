@@ -8,8 +8,7 @@ import { ThemeProvider } from '@/contexts/ThemeContext'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { PerformanceMonitor } from '@/components/PerformanceMonitor'
-import { AdsterraScript, PopunderAd } from '@/components/AdsterraAds'
-import { AdBlockerDetector } from '@/components/AdBlockerDetector'
+
 import { faqSchema, breadcrumbSchema } from '@/utils/advancedSEO'
 
 const inter = Inter({
@@ -86,7 +85,7 @@ export const metadata: Metadata = {
   category: 'technology',
   classification: 'Free Online PDF Tools',
   verification: {
-    google: 'google-site-verification-code', // Add your Google verification code
+    google: 'googlea0931fbff2f4a392', // Google Search Console verified
   },
 } as const
 
@@ -218,19 +217,8 @@ export default function RootLayout({
         <link rel="icon" href="/logo.png" type="image/png" sizes="192x192" />
         <link rel="icon" href="/logo.webp" type="image/webp" sizes="192x192" />
         <link rel="apple-touch-icon" href="/logo.png" />
-        {/* Adsterra Ad Network Script */}
-        <Script
-          src="https://a.magsrv.com/ad-provider.js"
-          strategy="afterInteractive"
-          async
-        />
       </head>
       <body className={`${inter.variable} min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 antialiased font-sans`}>
-        {/* Adsterra Ads Initialization */}
-        <AdsterraScript />
-        <PopunderAd />
-        <AdBlockerDetector />
-        
         <LanguageProvider>
           <ThemeProvider>
             <div className="min-h-screen flex flex-col">
@@ -240,8 +228,8 @@ export default function RootLayout({
               </main>
               <Footer />
             </div>
-            {/* Google Analytics - Replace G-XXXXXXXXXX with your measurement ID */}
-            <GoogleAnalytics measurementId="G-XXXXXXXXXX" />
+            {/* Google Analytics */}
+            <GoogleAnalytics measurementId="G-J1MTPQYDCL" />
             <PerformanceMonitor />
           </ThemeProvider>
         </LanguageProvider>

@@ -2,35 +2,10 @@
 
 import { useEffect } from 'react'
 
-export function AdsterraScript() {
-  useEffect(() => {
-    // Load Adsterra scripts
-    if (typeof window !== 'undefined') {
-      // Popunder scripts
-      const popunderScript1 = document.createElement('script')
-      popunderScript1.src = 'https://tuxedoarbourannouncement.com/bf/93/6d/bf936dcbca5a547e4bb602e649b57d5a.js'
-      popunderScript1.async = true
-      document.head.appendChild(popunderScript1)
-
-      const popunderScript2 = document.createElement('script')
-      popunderScript2.src = 'https://tuxedoarbourannouncement.com/12/c5/b8/12c5b8135e28411b4621a530105e946e.js'
-      popunderScript2.async = true
-      document.head.appendChild(popunderScript2)
-
-      const popunderScript3 = document.createElement('script')
-      popunderScript3.src = 'https://tuxedoarbourannouncement.com/34dfef78cee11188b677b139aeba5b85/invoke.js'
-      popunderScript3.async = true
-      popunderScript3.setAttribute('data-cfasync', 'false')
-      document.head.appendChild(popunderScript3)
-    }
-  }, [])
-
-  return null
-}
-
 /**
- * Native Banner Ad with customizable dimensions
+ * Native Banner Ad - Lightweight banner ad
  * Default: 468x60 (half page), responsive
+ * Loads lazily to not impact page speed
  */
 export function NativeBannerAd({ width = 468, height = 60 }: { width?: number; height?: number } = {}) {
   useEffect(() => {
@@ -44,10 +19,11 @@ export function NativeBannerAd({ width = 468, height = 60 }: { width?: number; h
         params: {}
       }
 
-      // Load the ad script
+      // Load the ad script lazily
       const script = document.createElement('script')
       script.src = 'https://tuxedoarbourannouncement.com/e90add9736aed2790832f91965dc7b23/invoke.js'
       script.async = true
+      script.defer = true
       document.body.appendChild(script)
     }
   }, [width, height])
@@ -87,14 +63,6 @@ export function HalfPageBannerAd() {
   return <NativeBannerAd width={468} height={60} />
 }
 
-/**
- * Popunder Ad - Appears behind browser window
- * Include div container for popunder
- */
-export function PopunderAdContainer() {
-  return <div id="container-34dfef78cee11188b677b139aeba5b85" />
-}
-
 // Legacy components for backwards compatibility
 export function LeaderboardBanner() {
   return <LeaderboardBannerAd />
@@ -122,18 +90,6 @@ export function MediumRectangle() {
       <MediumRectangleAd />
     </div>
   )
-}
-
-export function SocialBarAd() {
-  return (
-    <div className="fixed right-0 top-1/2 transform -translate-y-1/2 z-40">
-      <div className="adsterra-ad-container" />
-    </div>
-  )
-}
-
-export function PopunderAd() {
-  return <PopunderAdContainer />
 }
 
 // Generic ad container (legacy)
