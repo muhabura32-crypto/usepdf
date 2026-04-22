@@ -16,7 +16,7 @@ import {
   CheckCircle,
 } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
-import { NativeBannerAd } from '@/components/AdsterraAds'
+import { NativeBannerAd, LeaderboardBannerAd, MobileBannerAd } from '@/components/AdsterraAds'
 
 const tools = [
   {
@@ -145,7 +145,7 @@ export default function HomePage() {
   const { t } = useLanguage()
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-20">
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800">
         <div className="absolute inset-0 bg-black/20" />
@@ -182,6 +182,13 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* 🔝 Top Ad - Soft Entry (After hero, before tools) */}
+      <section className="py-6 bg-gray-100 dark:bg-gray-900">
+        <div className="container-custom">
+          <LeaderboardBannerAd />
+        </div>
+      </section>
+
       {/* Tools Section */}
       <section id="tools" className="py-16 md:py-24 bg-gray-50 dark:bg-gray-900">
         <div className="container-custom">
@@ -199,6 +206,13 @@ export default function HomePage() {
               <ToolCard key={tool.href} tool={tool} index={index} />
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* 💰 Middle Ad - Money Zone (Between tools and features) */}
+      <section className="py-6 bg-white dark:bg-gray-800">
+        <div className="container-custom">
+          <NativeBannerAd />
         </div>
       </section>
 
@@ -230,12 +244,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Ad Section - Only one, at bottom */}
-      <section className="py-8 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+      {/* 📱 Bottom Ad - Before Footer (Passive) */}
+      <section className="py-6 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
         <div className="container-custom">
-          <NativeBannerAd />
+          <MobileBannerAd />
         </div>
       </section>
+
+      {/* Sticky Bottom Ad - Mobile Only */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 p-2 md:hidden z-40">
+        <NativeBannerAd height={50} />
+      </div>
     </div>
   )
 }

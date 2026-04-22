@@ -9,6 +9,7 @@ import { WebApplicationSchema, FAQSchema, BreadcrumbSchema } from '@/components/
 import { PerformanceMonitor, reportCustomMetric } from '@/components/PerformanceMonitor'
 import { generateToolFAQSchema } from '@/utils/seoMetadata'
 import { ToolDescription } from '@/components/ToolDescription'
+import { NativeBannerAd, LeaderboardBannerAd } from '@/components/AdsterraAds'
 
 type ProcessingStatus = 'idle' | 'processing' | 'completed' | 'error'
 
@@ -223,6 +224,13 @@ export default function MergePDFPage() {
         </div>
       </header>
 
+      {/* 🔝 Top Ad - After header, before content */}
+      <section className="py-4 bg-gray-100 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+        <div className="container-custom">
+          <LeaderboardBannerAd />
+        </div>
+      </section>
+
       <main className="container-custom py-12">
         <div className="max-w-2xl mx-auto">
           {/* Page Header */}
@@ -390,6 +398,9 @@ export default function MergePDFPage() {
                       OneDrive
                     </button>
                   </div>
+                {/* 💰 Pre-download Ad - Highest conversion zone */}
+                <div className="mb-6">
+                  <LeaderboardBannerAd />
                 </div>
 
                 <a href={downloadUrl} download="merged.pdf" className="btn-primary inline-flex">
@@ -457,6 +468,11 @@ export default function MergePDFPage() {
               100% Client-side - Files never leave your device
             </p>
           </div>
+        </div>
+
+        {/* 📱 Sticky Bottom Ad - Mobile Only */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 p-2 md:hidden z-40">
+          <NativeBannerAd height={50} />
         </div>
 
         {/* Tool Description Section */}
