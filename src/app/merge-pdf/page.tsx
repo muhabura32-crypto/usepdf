@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { Combine, Download, Upload, ArrowLeft, CheckCircle, AlertCircle, X, GripVertical, Loader2, FileText, Minimize2, Scissors, Image, RotateCw } from 'lucide-react'
+import { Combine, Download, Upload, ArrowLeft, CheckCircle, AlertCircle, X, GripVertical, Loader2, FileText, Minimize2, Scissors, Image, RotateCw, Zap, Keyboard, Touch } from 'lucide-react'
 import Link from 'next/link'
 import { PDFDocument } from 'pdf-lib'
 import { WebApplicationSchema, FAQSchema, BreadcrumbSchema } from '@/components/SchemaMarkup'
@@ -16,8 +16,34 @@ export default function MergePDFPage() {
   const [files, setFiles] = useState<File[]>([])
   const [status, setStatus] = useState<ProcessingStatus>('idle')
   const [progress, setProgress] = useState(0)
+  const [processingSpeed, setProcessingSpeed] = useState(0)
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
+  const [showShortcuts, setShowShortcuts] = useState(false)
+  const startTimeRef = useRef<number>(0)
+
+  // Detect mobile
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768)
+  }, [])
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.key === 'Enter' && files.length >= 2 && status === 'idle') {
+        mergePDFs()
+      }
+      if (e.key === 'Escape') {
+        setShowShortcuts(false)
+      }
+      if (e.key === '?' && !e.ctrlKey) {
+        setShowShortcuts(prev => !prev)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [files.length, status])
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const pdfFiles = acceptedFiles.filter(f => f.type === 'application/pdf')
@@ -58,16 +84,30 @@ export default function MergePDFPage() {
     }
 
     const startTime = performance.now()
+    startTimeRef.current = startTime
     setStatus('processing')
     setProgress(10)
     setError(null)
+    setProcessingSpeed(0)
 
     try {
       // Create new PDF document
       const mergedPdf = await PDFDocument.create()
       
+      const totalSize = files.reduce((acc, f) => acc + f.size, 0)
+      let processedSize = 0
+      
       const progressInterval = setInterval(() => {
-        setProgress(prev => Math.min(prev + 15, 90))
+        setProgress(prev => {
+          const newProgress = Math.min(prev + 15, 90)
+          // Calculate processing speed
+          processedSize = (totalSize * newProgress) / 100
+          const elapsed = (performance.now() - startTime) / 1000
+          if (elapsed > 0.5) {
+            setProcessingSpeed(Math.round(processedSize / elapsed / 1024 / 1024))
+          }
+          return newProgress
+        })
       }, 200)
 
       // Load and merge all PDFs
@@ -222,31 +262,39 @@ export default function MergePDFPage() {
                 </div>
               </div>
 
-              {/* File List */}
+              {/* File List - Mobile Optimized */}
               {files.length > 0 && (
                 <div className="mt-6 space-y-3">
                   {files.map((file, index) => (
-                    <div key={index} className="card p-4 flex items-center justify-between">
+                    <div key={index} className="card p-3 md:p-4 flex items-center justify-between touch-manipulation">
                       <div className="flex items-center flex-1 min-w-0">
+                        {/* Larger touch target for mobile */}
                         <button 
                           onClick={() => index > 0 && moveFile(index, index - 1)}
                           disabled={index === 0}
-                          className="p-2 text-gray-400 hover:text-gray-600 disabled:opacity-30"
+                          className="p-2 md:p-2 text-gray-400 hover:text-gray-600 disabled:opacity-30 active:scale-95 transition-transform"
+                          aria-label="Move up"
                         >
                           <GripVertical className="w-5 h-5" />
                         </button>
-                        <div className="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                          <Combine className="w-5 h-5 text-red-500" />
+                        <div className="w-12 h-12 md:w-10 md:h-10 bg-red-100 dark:bg-red-900/30 rounded-xl flex items-center justify-center mr-3 flex-shrink-0">
+                          <FileText className="w-6 h-6 md:w-5 md:h-5 text-red-500" />
                         </div>
-                        <div className="min-w-0">
-                          <p className="font-medium text-gray-900 dark:text-white truncate">
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-gray-900 dark:text-white text-sm md:text-base truncate">
                             {file.name}
                           </p>
-                          <p className="text-sm text-gray-500">
+                          <p className="text-xs md:text-sm text-gray-500">
                             {(file.size / 1024 / 1024).toFixed(2)} MB
                           </p>
                         </div>
                       </div>
+                      {/* Mobile: Larger delete button */}
+                      <button
+                        onClick={() => removeFile(index)}
+                        className="p-3 md:p-2 text-gray-400 hover:text-red-500 transition-colors active:scale-90 touch-manipulation"
+                        aria-label="Remove file"
+                      >
                       <button
                         onClick={() => removeFile(index)}
                         className="p-2 text-gray-400 hover:text-red-500 transition-colors"
@@ -259,10 +307,22 @@ export default function MergePDFPage() {
                   {files.length >= 2 && (
                     <button
                       onClick={mergePDFs}
-                      className="btn-primary w-full"
+                      className="btn-primary w-full py-3 md:py-4 text-base md:text-lg"
                     >
                       <Combine className="w-5 h-5 mr-2" />
                       Merge {files.length} PDFs
+                      {/* Show keyboard shortcut on desktop */}
+                      {!isMobile && <span className="hidden md:inline ml-2 text-xs opacity-70 bg-black/20 px-2 py-0.5 rounded">Ctrl+Enter</span>}
+                    </button>
+                  )}
+                  
+                  {/* Keyboard shortcuts hint */}
+                  {!isMobile && (
+                    <button 
+                      onClick={() => setShowShortcuts(!showShortcuts)}
+                      className="flex items-center justify-center gap-2 text-xs text-gray-500 mt-3 hover:text-gray-700"
+                    >
+                      <Keyboard className="w-3 h-3" /> Press ? for shortcuts
                     </button>
                   )}
                 </div>
@@ -278,24 +338,27 @@ export default function MergePDFPage() {
             </div>
           )}
 
-          {/* Processing */}
+          {/* Processing - Enhanced with speed indicator */}
           {status === 'processing' && (
             <div className="mt-6">
-              <div className="card p-8 text-center">
-                <div className="w-20 h-20 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900/30 dark:to-primary-800/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Loader2 className="w-10 h-10 text-primary-500 animate-spin" />
+              <div className="card p-6 md:p-8 text-center">
+                <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900/30 dark:to-primary-800/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Loader2 className="w-8 h-8 md:w-10 md:h-10 text-primary-500 animate-spin" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white mb-2">
                   Merging your PDFs...
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-6">
-                  Processing {files.length} files
+                <p className="text-gray-600 dark:text-gray-300 mb-4">
+                  Processing {files.length} files • {processingSpeed > 0 && `${processingSpeed} MB/s`}
                 </p>
                 
-                <div className="progress-bar">
+                <div className="progress-bar h-3 md:h-2">
                   <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
                 </div>
-                <p className="text-sm text-gray-500 mt-2">{progress}%</p>
+                <div className="flex justify-between text-sm text-gray-500 mt-2">
+                  <span>{progress}%</span>
+                  {processingSpeed > 0 && <span className="flex items-center"><Zap className="w-3 h-3 mr-1" />{processingSpeed} MB/s</span>}
+                </div>
               </div>
             </div>
           )}
@@ -356,6 +419,36 @@ export default function MergePDFPage() {
                       <span className="text-xs text-gray-500">{tool.desc}</span>
                     </Link>
                   ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Keyboard Shortcuts Modal */}
+          {showShortcuts && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 max-w-md w-full">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                    <Keyboard className="w-5 h-5" /> Keyboard Shortcuts
+                  </h3>
+                  <button onClick={() => setShowShortcuts(false)} className="text-gray-500 hover:text-gray-700">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Merge PDFs</span>
+                    <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">Ctrl + Enter</kbd>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Close dialog</span>
+                    <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">Esc</kbd>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Show shortcuts</span>
+                    <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">?</kbd>
+                  </div>
                 </div>
               </div>
             </div>
