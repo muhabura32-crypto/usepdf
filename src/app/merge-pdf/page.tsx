@@ -295,10 +295,6 @@ export default function MergePDFPage() {
                         className="p-3 md:p-2 text-gray-400 hover:text-red-500 transition-colors active:scale-90 touch-manipulation"
                         aria-label="Remove file"
                       >
-                      <button
-                        onClick={() => removeFile(index)}
-                        className="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                      >
                         <X className="w-5 h-5" />
                       </button>
                     </div>
