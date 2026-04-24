@@ -26,7 +26,8 @@ type KeywordIntent =
   | 'problem'
   | 'device'
   | 'industry'
-  | 'location';
+  | 'location'
+  | 'tool-intent';
 
 interface KeywordCluster {
   id: string;
@@ -691,6 +692,7 @@ class KeywordResearchSystem {
       'location': 12,
       'informational': 10,
       'navigational': 5,
+      'tool-intent': 19,
     };
     score += intentScores[intent] || 5;
 

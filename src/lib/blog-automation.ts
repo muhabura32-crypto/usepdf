@@ -82,6 +82,7 @@ interface KeywordData {
   searchVolume: number;
   competition: number;
   intent: string;
+  relatedTerms?: string[];
 }
 
 class BlogAutomationSystem {
@@ -198,7 +199,7 @@ class BlogAutomationSystem {
           answerPattern: `Yes! {solution} addresses the root cause, not just symptoms. When properly implemented, it provides a long-term solution to {problem.toLowerCase()}.`,
         },
         {
-          questionPattern: 'What if {solution} doesn't work for me?',
+          questionPattern: 'What if {solution} doesn\'t work for me?',
           answerPattern: `{solution} works for 99% of cases. If you encounter issues, our troubleshooting guide covers edge cases and alternative approaches.`,
         },
       ],
@@ -451,13 +452,16 @@ class BlogAutomationSystem {
       faqs,
       relatedTools,
       internalLinks,
-      schemaMarkup: this.generateSchemaMarkup(post),
+      schemaMarkup: {},
       wordCount,
       seoScore,
       priority: seoScore,
       topics: this.extractTopics(data),
       keywords: this.extractKeywords(data),
     };
+
+    // Generate schema markup after post object is created
+    post.schemaMarkup = this.generateSchemaMarkup(post);
 
     this.posts.set(slug, post);
     return post;
@@ -501,6 +505,14 @@ class BlogAutomationSystem {
     }
 
     return posts;
+  }
+
+  /**
+   * Generate featured image URL for a topic
+   */
+  private generateFeaturedImage(topic: string): string {
+    // Generate a default placeholder or use a CDN image
+    return `/images/blog/${topic.toLowerCase().replace(/\s+/g, '-')}.jpg`;
   }
 
   /**
@@ -885,7 +897,7 @@ class BlogAutomationSystem {
         };
       case 'device-based':
         return {
-          device: keyword.relatedTerms.find((t: string) => /mobile|android|ios/i.test(t)) || 'mobile device',
+          device: keyword.relatedTerms?.find((t: string) => /mobile|android|ios/i.test(t)) || 'mobile device',
         };
       case 'problem-solution':
         return {

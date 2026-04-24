@@ -8,6 +8,7 @@ import { ThemeProvider } from '@/contexts/ThemeContext'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { PerformanceMonitor } from '@/components/PerformanceMonitor'
+import { Analytics } from '@vercel/analytics/next'
 
 import { faqSchema, breadcrumbSchema } from '@/utils/advancedSEO'
 
@@ -233,6 +234,7 @@ export default function RootLayout({
             <PerformanceMonitor />
           </ThemeProvider>
         </LanguageProvider>
+        <Analytics />
       </body>
     </html>
   )

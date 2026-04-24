@@ -4,6 +4,8 @@
  * Builds full SEO link graph with no orphan pages
  */
 
+import type { SitemapUrl } from './sitemap-engine';
+
 interface PageNode {
   url: string;
   title: string;
@@ -118,7 +120,7 @@ class InternalLinkingGraph {
       return [];
     }
 
-    const recommendations: LinkRecommendations[] = [];
+    const recommendations: LinkRecommendation[] = [];
     const existingLinks = new Set(page.outboundLinks);
 
     // Find related tools (3 links)
