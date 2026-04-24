@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import React from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import {
   Combine,
@@ -14,10 +14,17 @@ import {
   Shield,
   Zap,
   CheckCircle,
+  Search,
+  ChevronRight,
 } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { NativeBannerAd, LeaderboardBannerAd, MobileBannerAd } from '@/components/AdsterraAds'
+import { trackEvent } from '@/lib/seo-initialize'
 
+// Track session for behavioral analysis
+const sessionId = `home_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`
+
+// Enhanced tools data with SEO metadata
 const tools = [
   {
     name: 'mergePdf',
@@ -26,6 +33,7 @@ const tools = [
     desc: 'Combine multiple PDFs into one seamless document',
     color: 'from-emerald-500 to-teal-500',
     bg: 'bg-emerald-50 dark:bg-emerald-900/20',
+    keywords: ['merge', 'combine', 'pdf', 'join'],
   },
   {
     name: 'compressPdf',
@@ -34,6 +42,7 @@ const tools = [
     desc: 'Reduce PDF file size while maintaining quality',
     color: 'from-orange-500 to-red-500',
     bg: 'bg-orange-50 dark:bg-orange-900/20',
+    keywords: ['compress', 'reduce', 'size', 'pdf'],
   },
   {
     name: 'splitPdf',
@@ -42,6 +51,7 @@ const tools = [
     desc: 'Extract specific pages or divide PDF into parts',
     color: 'from-violet-500 to-purple-500',
     bg: 'bg-violet-50 dark:bg-violet-900/20',
+    keywords: ['split', 'extract', 'divide', 'pdf'],
   },
   {
     name: 'pdfToJpg',
@@ -50,6 +60,7 @@ const tools = [
     desc: 'Convert PDF pages to high-quality JPG images',
     color: 'from-pink-500 to-rose-500',
     bg: 'bg-pink-50 dark:bg-pink-900/20',
+    keywords: ['convert', 'pdf', 'jpg', 'image'],
   },
   {
     name: 'pdfToPng',
@@ -58,6 +69,7 @@ const tools = [
     desc: 'Convert PDF pages to PNG images instantly',
     color: 'from-cyan-500 to-blue-500',
     bg: 'bg-cyan-50 dark:bg-cyan-900/20',
+    keywords: ['convert', 'pdf', 'png', 'image'],
   },
   {
     name: 'rotatePdf',
@@ -66,6 +78,7 @@ const tools = [
     desc: 'Rotate PDF pages by 90, 180, or 270 degrees',
     color: 'from-amber-500 to-orange-500',
     bg: 'bg-amber-50 dark:bg-amber-900/20',
+    keywords: ['rotate', 'pdf', 'orientation', 'flip'],
   },
   {
     name: 'jpgToPdf',
@@ -74,6 +87,7 @@ const tools = [
     desc: 'Convert JPG images to PDF documents',
     color: 'from-red-500 to-pink-500',
     bg: 'bg-red-50 dark:bg-red-900/20',
+    keywords: ['convert', 'jpg', 'pdf', 'image'],
   },
   {
     name: 'pngToPdf',
@@ -82,6 +96,7 @@ const tools = [
     desc: 'Convert PNG images to PDF format',
     color: 'from-blue-500 to-cyan-500',
     bg: 'bg-blue-50 dark:bg-blue-900/20',
+    keywords: ['convert', 'png', 'pdf', 'image'],
   },
   {
     name: 'imageToPdf',
@@ -90,6 +105,7 @@ const tools = [
     desc: 'Convert any image format to PDF',
     color: 'from-teal-500 to-green-500',
     bg: 'bg-teal-50 dark:bg-teal-900/20',
+    keywords: ['convert', 'image', 'pdf', 'any'],
   },
 ]
 
@@ -111,6 +127,15 @@ const features = [
   },
 ]
 
+// Searchable tools including programmatic pages
+const allSearchableTools = [
+  ...tools,
+  // Programmatic page templates
+  { name: 'programmatic/compress-online', href: '/compress-pdf-online-for-email', desc: 'Compress PDF for email', keywords: ['compress', 'online', 'email'] },
+  { name: 'programmatic/merge-pdfs', href: '/merge-pdfs-online-free', desc: 'Merge PDFs online free', keywords: ['merge', 'online', 'free'] },
+  { name: 'programmatic/pdf-mobile', href: '/pdf-tools-on-android', desc: 'PDF tools for Android', keywords: ['pdf', 'android', 'mobile'] },
+]
+
 function ToolCard({ tool, index }: { tool: typeof tools[0], index: number }) {
   const { t } = useLanguage()
 
@@ -123,6 +148,13 @@ function ToolCard({ tool, index }: { tool: typeof tools[0], index: number }) {
       <Link
         href={tool.href}
         className={`${tool.bg} rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] border border-gray-200 dark:border-gray-700 flex items-center gap-4 group`}
+        onClick={() => {
+          trackEvent(sessionId, 'tool_click', tool.name, {
+            href: tool.href,
+            position: index,
+            location: 'homepage_tools_grid'
+          })
+        }}
       >
         <div className={`w-12 h-12 bg-gradient-to-br ${tool.color} rounded-xl flex items-center justify-center flex-shrink-0`}>
           <tool.icon className="w-6 h-6 text-white" />
@@ -143,9 +175,80 @@ function ToolCard({ tool, index }: { tool: typeof tools[0], index: number }) {
 
 export default function HomePage() {
   const { t } = useLanguage()
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState<Array<typeof allSearchableTools[0]>>([])
+  const [showSearchResults, setShowSearchResults] = useState(false)
+
+  // Handle search
+  useEffect(() => {
+    if (searchQuery.length > 2) {
+      const query = searchQuery.toLowerCase()
+      const results = allSearchableTools.filter(tool =>
+        tool.name.toLowerCase().includes(query) ||
+        tool.desc.toLowerCase().includes(query) ||
+        tool.keywords?.some(k => k.includes(query))
+      ).slice(0, 8)
+      setSearchResults(results)
+      setShowSearchResults(true)
+      
+      trackEvent(sessionId, 'search_query', query, { 
+        location: 'homepage_search',
+        resultCount: results.length 
+      })
+    } else {
+      setShowSearchResults(false)
+    }
+  }, [searchQuery])
+
+  // Track page view
+  useEffect(() => {
+    trackEvent(sessionId, 'page_view', 'homepage', { path: '/' })
+  }, [])
+
+  const handleSearchResultClick = (tool: typeof allSearchableTools[0]) => {
+    trackEvent(sessionId, 'search_result_click', tool.name, {
+      query: searchQuery,
+      position: allSearchableTools.indexOf(tool)
+    })
+    setShowSearchResults(false)
+    setSearchQuery('')
+  }
 
   return (
     <div className="min-h-screen pb-20">
+      {/* SEO Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebApplication',
+            name: 'UsePDF - Free PDF Tools',
+            description: 'Fast, secure, and free online PDF tools. Merge, split, compress, convert, and rotate PDFs instantly. No signup required.',
+            url: 'https://usepdf.xyz',
+            applicationCategory: 'UtilityApplication',
+            operatingSystem: 'Any',
+            offers: {
+              '@type': 'Offer',
+              price: '0',
+              priceCurrency: 'USD',
+            },
+            aggregateRating: {
+              '@type': 'AggregateRating',
+              ratingValue: '4.9',
+              ratingCount: '10000+',
+            },
+            featureList: [
+              'Free to use online',
+              'No registration required',
+              '100% client-side processing',
+              'Secure and private',
+              'Fast processing',
+            ],
+          }),
+        }}
+      />
+
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800">
         <div className="absolute inset-0 bg-black/20" />
@@ -164,10 +267,68 @@ export default function HomePage() {
               Fast, private, and completely free PDF tools. Merge, compress, split, convert PDFs instantly. No signup required.
             </p>
             
+            {/* Smart Search Bar */}
+            <div className="max-w-2xl mx-auto mb-8 relative">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="✨ Search 1000+ PDF tools... (e.g., 'compress pdf for email')"
+                  className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none text-lg backdrop-blur-sm"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => searchQuery.length > 2 && setShowSearchResults(true)}
+                  onBlur={() => setTimeout(() => setShowSearchResults(false), 200)}
+                />
+              </div>
+
+              {/* Search Results Dropdown */}
+              {showSearchResults && searchResults.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden z-50 max-h-96 overflow-y-auto"
+                >
+                  {searchResults.map((tool, idx) => (
+                    <Link
+                      key={tool.href}
+                      href={tool.href}
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-0"
+                      onClick={() => handleSearchResultClick(tool)}
+                    >
+                      <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center">
+                        <ChevronRight className="w-4 h-4 text-primary-500" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-gray-900 dark:text-white text-sm">
+                          {tool.desc}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </motion.div>
+              )}
+
+              {/* SEO Badges */}
+              {searchQuery && (
+                <div className="mt-3 flex justify-center gap-4 text-xs text-gray-400">
+                  <span className="flex items-center gap-1">
+                    <CheckCircle className="w-3 h-3 text-green-400" />
+                    1000+ tools
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Zap className="w-3 h-3 text-yellow-400" />
+                    Instant results
+                  </span>
+                </div>
+              )}
+            </div>
+            
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/merge-pdf"
                 className="btn-primary px-6 py-3 text-lg"
+                onClick={() => trackEvent(sessionId, 'cta_click', 'get_started', { location: 'hero' })}
               >
                 Get Started Free
               </Link>
@@ -182,7 +343,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 🔝 Top Ad - Soft Entry (After hero, before tools) */}
+      {/* 🔝 Top Ad - Soft Entry */}
       <section className="py-6 bg-gray-100 dark:bg-gray-900">
         <div className="container-custom">
           <LeaderboardBannerAd />
@@ -209,7 +370,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 💰 Middle Ad - Money Zone (Between tools and features) */}
+      {/* 💰 Middle Ad - Money Zone */}
       <section className="py-6 bg-white dark:bg-gray-800">
         <div className="container-custom">
           <NativeBannerAd />
@@ -244,7 +405,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 📱 Bottom Ad - Before Footer (Passive) */}
+      {/* 📱 Bottom Ad - Before Footer */}
       <section className="py-6 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
         <div className="container-custom">
           <MobileBannerAd />

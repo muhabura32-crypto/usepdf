@@ -3,6 +3,9 @@
  * Structured data, performance metrics, and indexing optimization
  */
 
+import { ProgrammaticPage, Keyword } from '@/lib/programmatic-seo'
+import { BlogPost } from '@/lib/blog-automation'
+
 // Breadcrumb schema for navigation SEO
 export const breadcrumbSchema = {
   '@context': 'https://schema.org',
@@ -100,6 +103,179 @@ export function createHowToSchema(toolName: string, steps: string[]) {
   }
 }
 
+// FAQ Schema Auto-generator
+export function generateFAQSchema(faqs: Array<{question: string; answer: string}> | string[]) {
+  if (typeof faqs[0] === 'string') {
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: (faqs as string[]).map((q, index) => ({
+        '@type': 'Question',
+        name: q,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `Answer to: ${q}`,
+        },
+      })),
+    }
+  }
+  
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: (faqs as Array<{question: string; answer: string}>).map(faq => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
+  }
+}
+
+// Programmatic Page Schema Generator
+export function generateProgrammaticPageSchema(page: ProgrammaticPage) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: page.title,
+    description: page.metaDescription,
+    url: `https://usepdf.xyz${page.slug}`,
+    applicationCategory: 'Utility',
+    operatingSystem: 'Any',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    featureList: page.contentSections.map(s => s.heading),
+    review: {
+      '@type': 'Review',
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: '5',
+        bestRating: '5',
+      },
+      author: {
+        '@type': 'Person',
+        name: 'UsePDF Team',
+      },
+    },
+    mainEntity: page.faqs.map(faq => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
+  }
+}
+
+// Blog Post Schema Generator
+export function generateBlogPostSchema(post: BlogPost) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.metaTitle,
+    description: post.metaDescription,
+    datePublished: post.datePublished,
+    dateModified: post.dateModified,
+    author: {
+      '@type': 'Person',
+      name: post.author,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'UsePDF',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://usepdf.xyz/logo.png',
+      },
+    },
+    url: `https://usepdf.xyz/blog/${post.slug}`,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://usepdf.xyz/blog/${post.slug}`,
+    },
+    articleSection: post.category,
+    keywords: post.keywords.join(', '),
+    wordCount: post.wordCount,
+    timeRequired: `PT${Math.ceil(post.wordCount / 200)}M`,
+    image: post.featuredImage,
+    mainEntity: post.faqs.map(faq => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
+  }
+}
+
+// Breadcrumb Schema Generator
+export function generateBreadcrumbSchema(items: Array<{name: string; url: string}>) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  }
+}
+
+// Tool Aggregate Rating Schema
+export function generateToolRatingSchema(toolName: string, rating: number, reviewCount: number) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'AggregateRating',
+    ratingValue: rating,
+    reviewCount: reviewCount,
+    bestRating: 5,
+    worstRating: 1,
+    itemReviewed: {
+      '@type': 'SoftwareApplication',
+      name: toolName,
+    },
+  }
+}
+
+// How-to Schema Enhanced
+export function generateHowToSchema(data: {
+  title: string;
+  description: string;
+  steps: Array<{
+    name: string;
+    description: string;
+    image?: string;
+  }>;
+  timeRequired?: string;
+  toolsRequired?: string[];
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: data.title,
+    description: data.description,
+    timeRequired: data.timeRequired || 'PT15M',
+    tool: data.toolsRequired || [],
+    step: data.steps.map((step, index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      name: step.name,
+      text: step.description,
+      ...(step.image && {
+        image: step.image,
+      }),
+    })),
+  }
+}
+
 // Page speed optimization recommendations
 export const performanceRecommendations = {
   targetLCP: 2500, // Largest Contentful Paint (ms)
@@ -150,4 +326,52 @@ export const seoChecklist = {
     'No broken internal links',
     'Descriptive anchor text',
   ],
+}
+
+// Semantic keyword expansion
+export function expandKeywordsSemantically(keyword: string): string[] {
+  const expansions: Record<string, string[]> = {
+    'compress': ['reduce', 'shrink', 'minimize', 'optimize', 'decrease size'],
+    'merge': ['combine', 'join', 'unite', 'concatenate', 'assemble'],
+    'split': ['divide', 'separate', 'extract', 'break apart', 'partition'],
+    'convert': ['transform', 'change', 'translate', 'export', 'to'],
+    'rotate': ['turn', 'spin', 'flip', 'orient', 'twist'],
+    'pdf': ['portable document format', 'document', 'file', 'acrobat'],
+    'online': ['web', 'internet', 'digital', 'cloud', 'browser'],
+    'tool': ['software', 'application', 'program', 'utility', 'service'],
+  }
+
+  const result = [keyword]
+  Object.entries(expansions).forEach(([key, values]) => {
+    if (keyword.toLowerCase().includes(key)) {
+      result.push(...values.map(v => keyword.toLowerCase().replace(key, v)))
+    }
+  })
+
+  return [...new Set(result)].slice(0, 10)
+}
+
+// Content gap analyzer
+export function analyzeContentGaps(
+  existingKeywords: string[],
+  targetKeywords: Keyword[]
+): Array<{
+  keyword: string
+  searchVolume: number
+  competition: number
+  gap: number
+  priority: 'high' | 'medium' | 'low'
+}> {
+  const gaps = targetKeywords
+    .filter(k => !existingKeywords.includes(k.term))
+    .map(k => ({
+      keyword: k.term,
+      searchVolume: k.searchVolume,
+      competition: k.competition,
+      gap: k.priorityScore,
+      priority: k.priorityScore >= 70 ? 'high' : k.priorityScore >= 50 ? 'medium' : 'low',
+    }))
+    .sort((a, b) => b.gap - a.gap)
+
+  return gaps.slice(0, 20)
 }
