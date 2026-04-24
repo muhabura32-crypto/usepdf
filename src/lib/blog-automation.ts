@@ -198,7 +198,7 @@ class BlogAutomationSystem {
           answerPattern: `Yes! {solution} addresses the root cause, not just symptoms. When properly implemented, it provides a long-term solution to {problem.toLowerCase()}.`,
         },
         {
-          questionPattern: 'What if {solution} doesn't work for me?',
+          questionPattern: 'What if {solution} doesn\'t work for me?',
           answerPattern: `{solution} works for 99% of cases. If you encounter issues, our troubleshooting guide covers edge cases and alternative approaches.`,
         },
       ],
@@ -846,7 +846,7 @@ class BlogAutomationSystem {
   /**
    * Extract action from keyword
    */
-  private extractAction(keyword: string): string {
+  extractAction(keyword: string): string {
     const actions = ['compress', 'merge', 'split', 'convert', 'rotate', 'edit'];
     for (const action of actions) {
       if (keyword.toLowerCase().includes(action)) return action;

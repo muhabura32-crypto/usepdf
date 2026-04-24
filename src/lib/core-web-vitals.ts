@@ -323,7 +323,7 @@ class CoreWebVitalsOptimizer {
    */
   private deferNonCriticalJS(): void {
     // Defer non-critical scripts
-    document.querySelectorAll('script[defer]').forEach(script => {
+    document.querySelectorAll('script[defer]').forEach((script: HTMLScriptElement) => {
       if (!script.src.includes('analytics') && !script.src.includes('gtag')) {
         script.setAttribute('defer', 'true');
       }
