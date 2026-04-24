@@ -193,8 +193,8 @@ class CoreWebVitalsOptimizer {
       try {
         const fidObserver = new PerformanceObserver((entryList) => {
           const entries = entryList.getEntries();
-          const firstEntry = entries[0] as PerformanceEntry;
-          if (firstEntry) {
+          const firstEntry = entries[0] as any;
+          if (firstEntry && firstEntry.processingStart !== undefined) {
             this.vitals.FID = firstEntry.processingStart - firstEntry.startTime;
             this.addMetric('FID', this.vitals.FID, this.getRating(this.vitals.FID, 100, 300));
           }
@@ -323,8 +323,9 @@ class CoreWebVitalsOptimizer {
    */
   private deferNonCriticalJS(): void {
     // Defer non-critical scripts
-    document.querySelectorAll('script[defer]').forEach(script => {
-      if (!script.src.includes('analytics') && !script.src.includes('gtag')) {
+    document.querySelectorAll('script[defer]').forEach((el) => {
+      const script = el as HTMLScriptElement;
+      if (script.src && !script.src.includes('analytics') && !script.src.includes('gtag')) {
         script.setAttribute('defer', 'true');
       }
     });
@@ -513,12 +514,12 @@ class CoreWebVitalsOptimizer {
    * Handle metric
    */
   private handleMetric(metric: PerformanceMetrics): void {
-    this.vitals[metric.name as keyof CoreWebVitals] = metric.value;
-    this.addMetric(metric.name, metric.value, metric.rating);
+    this.vitals[metric.metric as keyof CoreWebVitals] = metric.value;
+    this.addMetric(metric.metric, metric.value, metric.rating);
 
     // Log to console in development
     if (process.env.NODE_ENV === 'development') {
-      console.log(`[Web Vitals] ${metric.name}:`, metric.value, metric.rating);
+      console.log(`[Web Vitals] ${metric.metric}:`, metric.value, metric.rating);
     }
 
     // Report to analytics
@@ -551,7 +552,7 @@ class CoreWebVitalsOptimizer {
    */
   private reportToAnalytics(metric: PerformanceMetrics): void {
     if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', metric.name, {
+      (window as any).gtag('event', metric.metric, {
         value: Math.round(metric.value),
         metric_rating: metric.rating,
         page_path: window.location.pathname,
