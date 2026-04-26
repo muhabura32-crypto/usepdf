@@ -1,24 +1,32 @@
 export async function GET() {
   const baseUrl = 'https://usepdf.xyz'
 
-  const routes = [
-    '',
-    '/merge-pdf',
-    '/split-pdf',
-    '/compress-pdf',
-    '/pdf-to-jpg',
-    '/pdf-to-png',
-    '/rotate-pdf',
-    '/blog',
-  ]
+   const routes = [
+     '',
+     '/merge-pdf',
+     '/split-pdf',
+     '/compress-pdf',
+     '/pdf-to-jpg',
+     '/pdf-to-png',
+     '/jpg-to-pdf',
+     '/png-to-pdf',
+     '/word-to-pdf',
+     '/image-to-pdf',
+     '/rotate-pdf',
+     '/blog',
+     '/about',
+     '/contact',
+   ]
 
-  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
         xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0">
   ${routes
     .map((route) => {
-      const priority = route === '' ? '1.0' : route === '/blog' ? '0.8' : '0.9'
+      const priority = route === '' ? '1.0' : 
+                      route === '/blog' ? '0.8' : 
+                      route === '/about' || route === '/contact' ? '0.7' : '0.9'
       const changefreq = route === '/blog' ? 'weekly' : 'monthly'
       return `
   <url>
