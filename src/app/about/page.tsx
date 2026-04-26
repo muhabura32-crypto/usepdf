@@ -1,11 +1,10 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useLanguage } from '@/contexts/LanguageContext'
 import { Shield, Zap, Users, Award, Globe, Heart } from 'lucide-react'
 
 export default function AboutPage() {
-  const { t } = useLanguage()
+
 
   const values = [
     {

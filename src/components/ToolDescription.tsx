@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { CheckCircle, AlertCircle, Clock, Zap, Shield, User } from 'lucide-react'
+import { CheckCircle, Zap, Shield, User } from 'lucide-react'
 
 interface ToolDescriptionProps {
   title: string

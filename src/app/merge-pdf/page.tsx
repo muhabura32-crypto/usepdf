@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { Combine, Download, Upload, ArrowLeft, CheckCircle, AlertCircle, X, GripVertical, Loader2, FileText, Minimize2, Scissors, Image, RotateCw } from 'lucide-react'
+import { Combine, Download, Upload, ArrowLeft, CheckCircle, AlertCircle, X, GripVertical, Loader2, Minimize2, Scissors, Image, RotateCw } from 'lucide-react'
 import Link from 'next/link'
 import { PDFDocument } from 'pdf-lib'
 import { WebApplicationSchema, FAQSchema, BreadcrumbSchema } from '@/components/SchemaMarkup'

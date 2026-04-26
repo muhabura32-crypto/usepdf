@@ -182,7 +182,6 @@ export function ReviewCard({ review, onHelpful, onReport }: ReviewCardProps) {
 }
 
 interface ReviewSectionProps {
-  toolName?: string
   averageRating?: number
   totalReviews?: number
   reviews?: Review[]
@@ -190,7 +189,6 @@ interface ReviewSectionProps {
 }
 
 export function ReviewSection({
-  toolName,
   averageRating = 4.9,
   totalReviews = 1250,
   reviews = [],

@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { FileText, Download, Upload, ArrowLeft, CheckCircle, AlertCircle, Loader2, Info } from 'lucide-react'
+import { FileText, Download, Upload, ArrowLeft, AlertCircle, Loader2, Info } from 'lucide-react'
 import Link from 'next/link'
 import { ToolDescription } from '@/components/ToolDescription'
 
@@ -11,7 +11,6 @@ type ProcessingStatus = 'idle' | 'processing' | 'completed' | 'error'
 export default function WordToPDFPage() {
   const [files, setFiles] = useState<File[]>([])
   const [status, setStatus] = useState<ProcessingStatus>('idle')
-  const [downloadUrl, setDownloadUrl] = useState<string | null>(null)
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
 
@@ -30,7 +29,6 @@ export default function WordToPDFPage() {
 
     setFiles(wordFiles)
     setError(null)
-    setDownloadUrl(null)
   }, [])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -75,7 +73,6 @@ export default function WordToPDFPage() {
   const reset = () => {
     setFiles([])
     setStatus('idle')
-    setDownloadUrl(null)
     setProgress(0)
     setError(null)
   }

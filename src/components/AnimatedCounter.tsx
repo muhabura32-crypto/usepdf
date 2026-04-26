@@ -22,7 +22,6 @@ export function AnimatedCounter({
 }: AnimatedCounterProps) {
   const [displayValue, setDisplayValue] = useState(from)
   const count = useMotionValue(from)
-  const rounded = useTransform(count, (latest) => Math.round(latest))
 
   useEffect(() => {
     const controls = animate(count, to, {

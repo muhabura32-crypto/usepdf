@@ -174,7 +174,6 @@ function ToolCard({ tool, index }: { tool: typeof tools[0], index: number }) {
 }
 
 export default function HomePage() {
-  const { t } = useLanguage()
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<Array<typeof allSearchableTools[0]>>([])
   const [showSearchResults, setShowSearchResults] = useState(false)
@@ -283,13 +282,13 @@ export default function HomePage() {
               </div>
 
               {/* Search Results Dropdown */}
-              {showSearchResults && searchResults.length > 0 && (
+               {showSearchResults && searchResults.length > 0 && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden z-50 max-h-96 overflow-y-auto"
                 >
-                  {searchResults.map((tool, idx) => (
+                  {searchResults.map((tool) => (
                     <Link
                       key={tool.href}
                       href={tool.href}

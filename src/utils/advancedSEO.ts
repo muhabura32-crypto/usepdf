@@ -3,8 +3,6 @@
  * Structured data, performance metrics, and indexing optimization
  */
 
-import { ProgrammaticPage, Keyword } from '@/lib/programmatic-seo'
-import { BlogPost } from '@/lib/blog-automation'
 
 // Breadcrumb schema for navigation SEO
 export const breadcrumbSchema = {
@@ -124,87 +122,6 @@ export function generateFAQSchema(faqs: Array<{question: string; answer: string}
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     mainEntity: (faqs as Array<{question: string; answer: string}>).map(faq => ({
-      '@type': 'Question',
-      name: faq.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: faq.answer,
-      },
-    })),
-  }
-}
-
-// Programmatic Page Schema Generator
-export function generateProgrammaticPageSchema(page: ProgrammaticPage) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'WebApplication',
-    name: page.title,
-    description: page.metaDescription,
-    url: `https://usepdf.xyz${page.slug}`,
-    applicationCategory: 'Utility',
-    operatingSystem: 'Any',
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-    },
-    featureList: page.contentSections.map(s => s.heading),
-    review: {
-      '@type': 'Review',
-      reviewRating: {
-        '@type': 'Rating',
-        ratingValue: '5',
-        bestRating: '5',
-      },
-      author: {
-        '@type': 'Person',
-        name: 'UsePDF Team',
-      },
-    },
-    mainEntity: page.faqs.map(faq => ({
-      '@type': 'Question',
-      name: faq.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: faq.answer,
-      },
-    })),
-  }
-}
-
-// Blog Post Schema Generator
-export function generateBlogPostSchema(post: BlogPost) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: post.metaTitle,
-    description: post.metaDescription,
-    datePublished: post.datePublished,
-    dateModified: post.dateModified,
-    author: {
-      '@type': 'Person',
-      name: post.author,
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'UsePDF',
-      logo: {
-        '@type': 'ImageObject',
-        url: 'https://usepdf.xyz/logo.png',
-      },
-    },
-    url: `https://usepdf.xyz/blog/${post.slug}`,
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': `https://usepdf.xyz/blog/${post.slug}`,
-    },
-    articleSection: post.category,
-    keywords: post.keywords.join(', '),
-    wordCount: post.wordCount,
-    timeRequired: `PT${Math.ceil(post.wordCount / 200)}M`,
-    image: post.featuredImage,
-    mainEntity: post.faqs.map(faq => ({
       '@type': 'Question',
       name: faq.question,
       acceptedAnswer: {
@@ -348,30 +265,6 @@ export function expandKeywordsSemantically(keyword: string): string[] {
     }
   })
 
-  return [...new Set(result)].slice(0, 10)
+   return [...new Set(result)].slice(0, 10)
 }
 
-// Content gap analyzer
-export function analyzeContentGaps(
-  existingKeywords: string[],
-  targetKeywords: Keyword[]
-): Array<{
-  keyword: string
-  searchVolume: number
-  competition: number
-  gap: number
-  priority: 'high' | 'medium' | 'low'
-}> {
-  const gaps = targetKeywords
-    .filter(k => !existingKeywords.includes(k.term))
-    .map(k => ({
-      keyword: k.term,
-      searchVolume: k.searchVolume,
-      competition: k.competition,
-      gap: k.priorityScore,
-      priority: k.priorityScore >= 70 ? 'high' : k.priorityScore >= 50 ? 'medium' : 'low',
-    }))
-    .sort((a, b) => b.gap - a.gap)
-
-  return gaps.slice(0, 20)
-}

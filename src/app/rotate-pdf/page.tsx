@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { FileText, Download, Upload, ArrowLeft, CheckCircle, AlertCircle, Loader2, RotateCw } from 'lucide-react'
+import { FileText, Download, Upload, ArrowLeft, CheckCircle, Loader2, RotateCw } from 'lucide-react'
 import Link from 'next/link'
 import { ToolDescription } from '@/components/ToolDescription'
 

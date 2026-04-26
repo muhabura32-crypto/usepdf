@@ -1,8 +1,6 @@
 'use client'
 
-import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { useLanguage } from '@/contexts/LanguageContext'
 import { Calendar, User, ArrowRight, BookOpen } from 'lucide-react'
 
 const blogPosts = [
@@ -45,8 +43,6 @@ const blogPosts = [
 ]
 
 export default function BlogContent() {
-  const { t } = useLanguage()
-
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* Hero Section */}

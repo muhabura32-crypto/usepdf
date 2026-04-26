@@ -2,24 +2,6 @@
 
 import { useEffect } from 'react'
 
-interface PerformanceMetrics {
-  page: string
-  navigationTiming: {
-    domContentLoaded: number
-    loadComplete: number
-  }
-  coreWebVitals: {
-    lcp?: number
-    fid?: number
-    cls?: number
-    ttfb?: number
-  }
-  customMetrics: {
-    toolExecutionTime?: number
-    fileProcessingTime?: number
-  }
-}
-
 export function PerformanceMonitor() {
   useEffect(() => {
     // Monitor Core Web Vitals

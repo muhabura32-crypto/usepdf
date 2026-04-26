@@ -3,10 +3,10 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import Image from 'next/image'
-import { Image as ImageIcon, Download, Upload, ArrowLeft, CheckCircle, AlertCircle, Loader2, File, FileText, Minimize2, Combine, Scissors, RotateCw } from 'lucide-react'
+import { Image as ImageIcon, Download, Upload, ArrowLeft, CheckCircle, AlertCircle, Loader2, FileText, Minimize2, Combine, Scissors, RotateCw } from 'lucide-react'
 import Link from 'next/link'
 import { ToolDescription } from '@/components/ToolDescription'
-import { saveFileToSession, getFileFromSession, clearFileSession } from '@/utils/fileStorage'
+import { saveFileToSession, getFileFromSession } from '@/utils/fileStorage'
 
 type ProcessingStatus = 'idle' | 'processing' | 'completed' | 'error'
 

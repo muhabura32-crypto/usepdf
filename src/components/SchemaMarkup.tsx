@@ -1,5 +1,3 @@
-import { ReactNode } from 'react'
-
 interface SchemaMarkupProps {
   schema: Record<string, any>
 }

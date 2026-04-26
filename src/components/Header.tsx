@@ -9,7 +9,6 @@ import {
   X,
   Moon,
   Sun,
-  Monitor,
   ChevronDown,
   FileText,
   Scissors,

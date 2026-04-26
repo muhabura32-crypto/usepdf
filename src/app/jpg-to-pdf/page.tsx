@@ -4,7 +4,6 @@ import { useState, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { FileImage, Download, Upload, ArrowLeft, CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
 import Link from 'next/link'
-import JSZip from 'jszip'
 import { ToolDescription } from '@/components/ToolDescription'
 
 type ProcessingStatus = 'idle' | 'processing' | 'completed' | 'error'
